@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 import MyUserRoute from "./routes/MyUserRoute";
 import {v2 as cloudinary} from 'cloudinary';
 import myRestaurantRoute from "./routes/MyRestaurantRoute";
-// import restaurantRoute from "./routes/RestaurantRoute";
+import restaurantRoute from "./routes/RestaurantRoute";
 // import orderRoute from "./routes/OrderRoute";
 
 const PORT = process.env.PORT || 8000;
@@ -42,7 +42,7 @@ app.get("/health", async (req: Request, res: Response) => {
 
 app.use("/api/my/user", MyUserRoute);
 app.use("/api/my/restaurant", myRestaurantRoute);
-// app.use("/api/restaurant", restaurantRoute);
+app.use("/api/restaurant", restaurantRoute);
 // app.use("/api/order", orderRoute);
 
 
