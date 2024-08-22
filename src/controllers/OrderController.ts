@@ -32,7 +32,9 @@ type CheckoutSessionRequest = {
     addressLine1: string;
     city: string;
   };
-  restaurantId: string;
+  restaurantId: string
+  // discountCode?: string; // Optional discount code field
+  // discountPercentage?: number; // Optional discount percentage field
 };
 
 const stripeWebhookHandler = async (req: Request, res: Response) => {
@@ -120,6 +122,8 @@ const createLineItems = (
   checkoutSessionRequest: CheckoutSessionRequest,
   menuItems: MenuItemType[]
 ) => {
+  // const discount = checkoutSessionRequest.discountPercentage || 0;
+
   const lineItems = checkoutSessionRequest.cartItems.map((cartItem) => {
     const menuItem = menuItems.find(
       (item) => item._id.toString() === cartItem.menuItemId.toString()
@@ -129,10 +133,12 @@ const createLineItems = (
       throw new Error(`Menu item not found: ${cartItem.menuItemId}`);
     }
 
+    // const discountedPrice = menuItem.price * (1 - discount / 100);
+
     const line_item: Stripe.Checkout.SessionCreateParams.LineItem = {
       price_data: {
-        currency: "gbp",
-        unit_amount: menuItem.price,
+        currency: "usd",
+        unit_amount: menuItem.price*100,
         product_data: {
           name: menuItem.name,
         },
@@ -160,8 +166,8 @@ const createSession = async (
           display_name: "Delivery",
           type: "fixed_amount",
           fixed_amount: {
-            amount: deliveryPrice,
-            currency: "gbp",
+            amount: deliveryPrice*100,
+            currency: "usd",
           },
         },
       },
